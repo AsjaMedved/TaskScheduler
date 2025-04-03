@@ -45,4 +45,57 @@ public class TodosTest {
         Task[] expected = {meeting};
         Assertions.assertArrayEquals(expected, result);
     }
+    @Test
+    public void shouldFindMultipleTasks() {
+        SimpleTask simpleTask = new SimpleTask(1, "Позвонить в банк");
+        String[] subtasks = {"Купить молоко", "Позвонить в банк", "Сделать домашку"};
+        Epic epic = new Epic(2, subtasks);
+        Meeting meeting = new Meeting(3, "Обсуждение кредита", "Банк ВТБ", "Среда 15:00");
+
+        Todos todos = new Todos();
+        todos.add(simpleTask);
+        todos.add(epic);
+        todos.add(meeting);
+
+        Task[] expected = {simpleTask, epic};
+        Task[] actual = todos.search("Позвонить в банк");
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldFindExactlyOneTask() {
+        SimpleTask simpleTask = new SimpleTask(1, "Сходить в магазин");
+        String[] subtasks = {"Купить молоко", "Купить хлеб"};
+        Epic epic = new Epic(2, subtasks);
+        Meeting meeting = new Meeting(3, "Встреча с друзьями", "День рождения", "Пятница 19:00");
+
+        Todos todos = new Todos();
+        todos.add(simpleTask);
+        todos.add(epic);
+        todos.add(meeting);
+
+        Task[] expected = {meeting};
+        Task[] actual = todos.search("День рождения");
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldFindZeroTasks() {
+        SimpleTask simpleTask = new SimpleTask(1, "Прочитать книгу");
+        String[] subtasks = {"Посмотреть фильм", "Сходить в спортзал"};
+        Epic epic = new Epic(2, subtasks);
+        Meeting meeting = new Meeting(3, "Рабочее совещание", "Проект X", "Понедельник 10:00");
+
+        Todos todos = new Todos();
+        todos.add(simpleTask);
+        todos.add(epic);
+        todos.add(meeting);
+
+        Task[] expected = {};
+        Task[] actual = todos.search("Путешествие");
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
 }
